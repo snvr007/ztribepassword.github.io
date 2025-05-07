@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Password Vault</title>
+  <title>TUT Password Vault</title>
+  // some styling 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -65,7 +66,7 @@
 
     .password-container input {
       width: 100%;
-      padding-right: 90px; /* reserve space for icons */
+      padding-right: 90px; 
       box-sizing: border-box;
     }
 
@@ -118,19 +119,19 @@
     a:hover {
       text-decoration: underline;
     }
-
+<!-- some styling for my containers  --> 
   </style>
 </head>
 <body>
   <div class="container">
     <div id="loginDiv">
-      <h2>🔐 Secure Vault Login</h2>
+      <h2>🔐 Login </h2>
       <input type="password" id="accessKey" placeholder="Enter Access Key" />
       <button onclick="checkAccessKey()" id="login">Login</button>
     </div>
 
     <div id="vaultDiv" style="display: none;">
-      <h2>🔒 Password Vault</h2>
+      <h2>🔒 TUT Password Vault</h2>
       <div id="accountList"></div>
 
       <h3>Add New Entry</h3>
@@ -141,7 +142,7 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- my firebase linked -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -159,7 +160,7 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.firestore();
 
-    const accessKey = "ztribe"; // Demo key
+    const accessKey = "ztribe"; // trying to add password to my container
 
     function checkAccessKey() {
       const inputKey = document.getElementById("accessKey").value;
@@ -222,7 +223,7 @@
 
     function copyPassword(id) {
       const field = document.getElementById(id);
-      field.type = "text"; // temporarily show password
+      field.type = "text"; 
       field.select();
       document.execCommand("copy");
       field.type = "password";
