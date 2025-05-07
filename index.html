@@ -44,28 +44,32 @@
     }
 
     .password-container {
-      position: relative;
-    }
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
 
-    .password-container input {
-      padding-right: 90px;
-    }
+.password-container input {
+  width: 100%;
+  padding-right: 90px; /* reserve space for icons */
+  box-sizing: border-box;
+}
 
-    .password-actions {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+.password-actions {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-    .password-actions i {
-      cursor: pointer;
-      color: #00bcd4;
-      font-size: 1rem;
-    }
+.password-actions i {
+  cursor: pointer;
+  color: #00bcd4;
+  font-size: 1rem;
+}
 
     button {
       padding: 10px 20px;
