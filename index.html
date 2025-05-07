@@ -6,60 +6,49 @@
   <title>Password Vault</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* Global styles */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #121212;
-      color: #fff;
+      color: #ffffff;
       margin: 0;
       padding: 0;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 800px;
       margin: auto;
-      padding: 40px;
-      background: #1e1e1e;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      padding: 20px;
     }
 
     h2, h3 {
       color: #00bcd4;
-      font-weight: 600;
     }
 
     .card {
-      background-color: #222;
+      background-color: #1f1f1f;
       padding: 20px;
       margin-bottom: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 188, 212, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 188, 212, 0.15);
     }
 
-    /* Form input fields */
     input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 12px;
+      padding: 12px 16px;
       margin: 10px 0;
       border-radius: 6px;
-      border: 1px solid #444;
-      background-color: #333;
+      border: none;
+      background-color: #2a2a2a;
       color: #fff;
-      font-size: 1rem;
-      box-sizing: border-box;
+      font-size: 1em;
     }
 
     .password-container {
       position: relative;
-      width: 100%;
-      margin-bottom: 10px;
     }
 
     .password-container input {
-      width: 100%;
-      padding-right: 40px; /* space for icons */
-      box-sizing: border-box;
+      padding-right: 90px;
     }
 
     .password-actions {
@@ -68,32 +57,25 @@
       right: 10px;
       transform: translateY(-50%);
       display: flex;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
     }
 
     .password-actions i {
       cursor: pointer;
       color: #00bcd4;
-      font-size: 1.2rem;
-      transition: color 0.3s ease;
+      font-size: 1rem;
     }
 
-    .password-actions i:hover {
-      color: #0097a7;
-    }
-
-    /* Buttons */
     button {
-      padding: 12px 20px;
+      padding: 10px 20px;
       background-color: #00bcd4;
       color: #fff;
       border: none;
       border-radius: 6px;
-      font-size: 1rem;
+      font-size: 1em;
       cursor: pointer;
       transition: background 0.3s ease;
-      width: 100%;
     }
 
     button:hover {
@@ -112,34 +94,16 @@
     a:hover {
       text-decoration: underline;
     }
-
-    /* Login and Vault Section Styles */
-    #loginDiv, #vaultDiv {
-      display: none;
-    }
-
-    /* Add responsiveness */
-    @media screen and (max-width: 768px) {
-      .container {
-        padding: 20px;
-      }
-
-      button {
-        font-size: 0.9rem;
-      }
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Login Section -->
     <div id="loginDiv">
       <h2>🔐 Secure Vault Login</h2>
       <input type="password" id="accessKey" placeholder="Enter Access Key" />
       <button onclick="checkAccessKey()" id="login">Login</button>
     </div>
 
-    <!-- Vault Section -->
     <div id="vaultDiv" style="display: none;">
       <h2>🔒 Password Vault</h2>
       <div id="accountList"></div>
@@ -158,7 +122,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    // Firebase configuration and initialization
     var firebaseConfig = {
       apiKey: "AIzaSyAdQXobYdViArKQqLn2GYa1hzzhPU2YTwI",
       authDomain: "zebrapassword.firebaseapp.com",
