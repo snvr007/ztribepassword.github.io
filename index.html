@@ -13,63 +13,86 @@
       margin: 0;
       padding: 0;
     }
+
     .container {
       max-width: 800px;
       margin: auto;
       padding: 20px;
     }
+
     h2, h3 {
       color: #00bcd4;
     }
+
     .card {
       background-color: #1f1f1f;
       padding: 20px;
       margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 188, 212, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 188, 212, 0.15);
     }
+
     input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 10px;
+      padding: 12px 16px;
       margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #444;
+      border-radius: 6px;
+      border: none;
       background-color: #2a2a2a;
       color: #fff;
+      font-size: 1em;
     }
+
+    .password-container {
+      position: relative;
+    }
+
+    .password-container input {
+      padding-right: 90px;
+    }
+
+    .password-actions {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .password-actions i {
+      cursor: pointer;
+      color: #00bcd4;
+      font-size: 1rem;
+    }
+
     button {
       padding: 10px 20px;
       background-color: #00bcd4;
       color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 1em;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
+
     button:hover {
       background-color: #0097a7;
     }
+
     .last-changed {
-      font-size: 0.9em;
-      color: #aaa;
+      font-size: 0.85em;
+      color: #bbb;
     }
 
-    /* Password show/hide styles */
-    .password-wrapper {
-      position: relative;
+    a {
+      color: #4dd0e1;
     }
-    .password-wrapper input {
-      padding-right: 40px;
-    }
-    .password-toggle {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      color: #aaa;
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -77,12 +100,7 @@
   <div class="container">
     <div id="loginDiv">
       <h2>🔐 Secure Vault Login</h2>
-      <div class="password-wrapper">
-        <input type="password" id="accessKey" placeholder="Enter Access Key" />
-        <button class="password-toggle" onclick="toggleVisibility('accessKey', this)">
-          <i class="fas fa-eye"></i>
-        </button>
-      </div>
+      <input type="password" id="accessKey" placeholder="Enter Access Key" />
       <button onclick="checkAccessKey()" id="login">Login</button>
     </div>
 
@@ -92,12 +110,7 @@
 
       <h3>Add New Entry</h3>
       <input type="text" id="newUsername" placeholder="Username" />
-      <div class="password-wrapper">
-        <input type="password" id="newPassword" placeholder="Password" />
-        <button class="password-toggle" onclick="toggleVisibility('newPassword', this)">
-          <i class="fas fa-eye"></i>
-        </button>
-      </div>
+      <input type="password" id="newPassword" placeholder="Password" />
       <input type="text" id="newWebsite" placeholder="Website URL" />
       <button onclick="addNewEntry()" id="NewEntry">Add Entry</button>
     </div>
@@ -109,7 +122,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    // Firebase config
     var firebaseConfig = {
       apiKey: "AIzaSyAdQXobYdViArKQqLn2GYa1hzzhPU2YTwI",
       authDomain: "zebrapassword.firebaseapp.com",
@@ -144,22 +156,52 @@
           const lastChanged = data.lastChanged?.toDate().toLocaleString() || "N/A";
           const card = document.createElement("div");
           card.className = "card";
+          const inputId = `pass-${doc.id}`;
+
           card.innerHTML = `
             <p><strong>👤 Username:</strong> ${data.username}</p>
-            <p><strong>🌐 Website:</strong> <a href="${data.website}" target="_blank" style="color: #00bcd4;">${data.website}</a></p>
-            <p><strong>🔑 Password:</strong><br>
-              <div class="password-wrapper">
-                <input type="password" value="${data.password}" id="pass-${doc.id}" onchange="updatePassword('${doc.id}')" />
-                <button class="password-toggle" onclick="toggleVisibility('pass-${doc.id}', this)">
-                  <i class="fas fa-eye"></i>
-                </button>
+            <p><strong>🌐 Website:</strong> <a href="${data.website}" target="_blank">${data.website}</a></p>
+            <p><strong>🔑 Password:</strong></p>
+            <div class="password-container">
+              <input type="password" value="${data.password}" id="${inputId}" onchange="updatePassword('${doc.id}')" />
+              <div class="password-actions">
+                <i class="fas fa-eye" onclick="toggleVisibility('${inputId}', this)"></i>
+                <i class="fas fa-copy" onclick="copyPassword('${inputId}')"></i>
               </div>
-            </p>
+            </div>
             <p class="last-changed">🕒 Last Updated: ${lastChanged}</p>
           `;
           listDiv.appendChild(card);
         });
       });
+    }
+
+    function toggleVisibility(id, icon) {
+      const field = document.getElementById(id);
+      if (field.type === "password") {
+        field.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+
+        setTimeout(() => {
+          field.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }, 5000); // auto-hide after 5s
+      } else {
+        field.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+
+    function copyPassword(id) {
+      const field = document.getElementById(id);
+      field.type = "text"; // temporarily show password
+      field.select();
+      document.execCommand("copy");
+      field.type = "password";
+      alert("Password copied to clipboard!");
     }
 
     function updatePassword(id) {
@@ -190,21 +232,6 @@
       document.getElementById("newUsername").value = "";
       document.getElementById("newPassword").value = "";
       document.getElementById("newWebsite").value = "";
-    }
-
-    function toggleVisibility(inputId, button) {
-      const input = document.getElementById(inputId);
-      const icon = button.querySelector("i");
-
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-      }
     }
   </script>
 </body>
