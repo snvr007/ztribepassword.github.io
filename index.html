@@ -65,7 +65,7 @@
 
     .password-container input {
       width: 100%;
-      padding-right: 90px; 
+      padding-right: 90px; /* reserve space for icons */
       box-sizing: border-box;
     }
 
@@ -118,7 +118,6 @@
     a:hover {
       text-decoration: underline;
     }
-<!-- some styling for my containers  --> 
   </style>
 </head>
 <body>
@@ -141,7 +140,7 @@
     </div>
   </div>
 
-  <!-- my firebase linked -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -159,7 +158,7 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.firestore();
 
-    const accessKey = "ztribe"; // trying to add password to my container
+    const accessKey = "ztribe"; // Demo key
 
     function checkAccessKey() {
       const inputKey = document.getElementById("accessKey").value;
@@ -176,7 +175,7 @@
       db.collection("accounts").orderBy("lastChanged", "desc").onSnapshot(snapshot => {
         const listDiv = document.getElementById("accountList");
         listDiv.innerHTML = "";
-        snapshot.forEach(doc => {
+        snapshot.forEach((doc, index) => {
           const data = doc.data();
           const lastChanged = data.lastChanged?.toDate().toLocaleString() || "N/A";
           const card = document.createElement("div");
@@ -184,6 +183,7 @@
           const inputId = `pass-${doc.id}`;
 
           card.innerHTML = `
+            <h3>🔑 ${data.website}</h3> <!-- Heading added here -->
             <p><strong>👤 Username:</strong> ${data.username}</p>
             <p><strong>🌐 Website:</strong> <a href="${data.website}" target="_blank">${data.website}</a></p>
             <p><strong>🔑 Password:</strong></p>
@@ -222,7 +222,7 @@
 
     function copyPassword(id) {
       const field = document.getElementById(id);
-      field.type = "text"; 
+      field.type = "text"; // temporarily show password
       field.select();
       document.execCommand("copy");
       field.type = "password";
