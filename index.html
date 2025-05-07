@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,82 +8,68 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
+      background-color: #121212;
+      color: #ffffff;
       margin: 0;
       padding: 0;
     }
-
     .container {
       max-width: 800px;
-      margin: 40px auto;
+      margin: auto;
       padding: 20px;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
-
     h2, h3 {
-      color: #2c3e50;
-      margin-bottom: 20px;
+      color: #00bcd4;
     }
-
     .card {
-      background-color: #f9f9f9;
-      padding: 16px 20px;
+      background-color: #1f1f1f;
+      padding: 20px;
       margin-bottom: 20px;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 188, 212, 0.2);
     }
-
-    input[type="text"],
-    input[type="password"] {
+    input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin: 10px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      font-size: 15px;
-      color: #333;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background-color: #2a2a2a;
+      color: #fff;
     }
-
     button {
-      padding: 12px 24px;
-      background-color: #0077cc;
+      padding: 10px 20px;
+      background-color: #00bcd4;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 15px;
-      font-weight: 500;
-      transition: background-color 0.3s;
     }
-
     button:hover {
-      background-color: #005fa3;
+      background-color: #0097a7;
     }
-
     .last-changed {
-      font-size: 0.85em;
-      color: #777;
+      font-size: 0.9em;
+      color: #aaa;
     }
 
-    a {
-      color: #0077cc;
-      text-decoration: none;
+    /* Password show/hide styles */
+    .password-wrapper {
+      position: relative;
     }
-
-    a:hover {
-      text-decoration: underline;
+    .password-wrapper input {
+      padding-right: 40px;
     }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 15px;
-      }
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #aaa;
     }
   </style>
 </head>
@@ -91,7 +77,12 @@
   <div class="container">
     <div id="loginDiv">
       <h2>🔐 Secure Vault Login</h2>
-      <input type="password" id="accessKey" placeholder="Enter Access Key" />
+      <div class="password-wrapper">
+        <input type="password" id="accessKey" placeholder="Enter Access Key" />
+        <button class="password-toggle" onclick="toggleVisibility('accessKey', this)">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
       <button onclick="checkAccessKey()" id="login">Login</button>
     </div>
 
@@ -101,7 +92,12 @@
 
       <h3>Add New Entry</h3>
       <input type="text" id="newUsername" placeholder="Username" />
-      <input type="password" id="newPassword" placeholder="Password" />
+      <div class="password-wrapper">
+        <input type="password" id="newPassword" placeholder="Password" />
+        <button class="password-toggle" onclick="toggleVisibility('newPassword', this)">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
       <input type="text" id="newWebsite" placeholder="Website URL" />
       <button onclick="addNewEntry()" id="NewEntry">Add Entry</button>
     </div>
@@ -113,6 +109,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
+    // Firebase config
     var firebaseConfig = {
       apiKey: "AIzaSyAdQXobYdViArKQqLn2GYa1hzzhPU2YTwI",
       authDomain: "zebrapassword.firebaseapp.com",
@@ -125,7 +122,7 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.firestore();
 
-    const accessKey = "ztribe";
+    const accessKey = "ztribe"; // Demo key
 
     function checkAccessKey() {
       const inputKey = document.getElementById("accessKey").value;
@@ -149,9 +146,14 @@
           card.className = "card";
           card.innerHTML = `
             <p><strong>👤 Username:</strong> ${data.username}</p>
-            <p><strong>🌐 Website:</strong> <a href="${data.website}" target="_blank">${data.website}</a></p>
+            <p><strong>🌐 Website:</strong> <a href="${data.website}" target="_blank" style="color: #00bcd4;">${data.website}</a></p>
             <p><strong>🔑 Password:</strong><br>
-              <input type="password" value="${data.password}" id="pass-${doc.id}" onchange="updatePassword('${doc.id}')" />
+              <div class="password-wrapper">
+                <input type="password" value="${data.password}" id="pass-${doc.id}" onchange="updatePassword('${doc.id}')" />
+                <button class="password-toggle" onclick="toggleVisibility('pass-${doc.id}', this)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
             </p>
             <p class="last-changed">🕒 Last Updated: ${lastChanged}</p>
           `;
@@ -188,6 +190,21 @@
       document.getElementById("newUsername").value = "";
       document.getElementById("newPassword").value = "";
       document.getElementById("newWebsite").value = "";
+    }
+
+    function toggleVisibility(inputId, button) {
+      const input = document.getElementById(inputId);
+      const icon = button.querySelector("i");
+
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
     }
   </script>
 </body>
